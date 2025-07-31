@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>عرض الصور</title>
+  <title>عرض الصور - حماية عند السكرين</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -15,7 +15,7 @@
       padding: 20px;
       user-select: none;
       -webkit-user-select: none;
-      touch-action: manipulation;
+      touch-action: none;
     }
 
     .image-container {
@@ -43,8 +43,8 @@
   </style>
 </head>
 
-<body oncontextmenu="return false;">
-  <h1>مستر مهاب</h1>
+<body oncontextmenu="return false">
+  <h1>عرض الصور</h1>
 
   <div class="image-container" id="images">
     <img src="image/6VA6J4MKO0-166.png" alt="الصورة الأولى">
@@ -52,48 +52,51 @@
   </div>
 
   <script>
-    // تشويش الصور
+    const images = document.getElementById("images");
+
+    // 🔁 تشويش/إلغاء تشويش الصور
     function blurImages(state) {
-      const container = document.getElementById("images");
       if (state) {
-        container.classList.add("blurred");
+        images.classList.add("blurred");
       } else {
-        container.classList.remove("blurred");
+        images.classList.remove("blurred");
       }
     }
 
-    // محاولة منع السكرين شوت (PC)
-    window.addEventListener('keyup', function(e) {
+    // ✅ منع الضغط اليمين
+    document.addEventListener("contextmenu", e => e.preventDefault());
+
+    // ✅ منع النسخ
+    document.addEventListener("copy", e => {
+      e.preventDefault();
+      alert("❌ النسخ غير مسموح!");
+    });
+
+    // ✅ محاولة كشف PrintScreen على الكمبيوتر
+    window.addEventListener("keyup", function(e) {
       if (e.key === "PrintScreen") {
         blurImages(true);
-       
+        
         setTimeout(() => blurImages(false), 3000);
       }
     });
 
-    // منع الضغط المطول على الموبايل (Android/iOS)
-    document.addEventListener("touchstart", function(e) {
-      if (e.touches.length > 1) e.preventDefault(); // منع اللمس المتعدد
-    }, { passive: false });
-
-    document.addEventListener("contextmenu", function(e) {
-      e.preventDefault(); // منع زر الماوس الأيمن
-    });
-
-    // تشويش مؤقت عند مغادرة الصفحة (مثلاً لتبديل التطبيقات)
+    // ✅ محاولة كشف التبديل في الموبايل (لأخذ لقطة)
     document.addEventListener("visibilitychange", function() {
       if (document.hidden) {
         blurImages(true);
       } else {
-        blurImages(false);
+        setTimeout(() => blurImages(false), 1000);
       }
     });
 
-    // منع النسخ
-    document.addEventListener("copy", function(e) {
-      e.preventDefault();
-      alert("النسخ غير مسموح!");
-    });
+    // ✅ منع السحب والضغط المطوّل
+    document.addEventListener("touchstart", function(e) {
+      if (e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("gesturestart", e => e.preventDefault());
   </script>
 </body>
 </html>
+
