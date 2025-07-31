@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>عرض الصور</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .image-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 50px;
+    }
+
+    .image-container img {
+      width: 400px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      transition: filter 0.3s;
+    }
+
+    .blurred img {
+      filter: blur(30px);
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <h1>مستر مهاب</h1>
+  <div class="image-container" id="images">
+    <img src="image/6VA6J4MKO0-166.png" alt="الصورة الأولى">
+    <img src="image/home.png" alt="الصورة الثانية">
+  </div>
+
+  <script>
+    // تعطيل مفتاح PrintScreen
+    window.addEventListener('keyup', function(e) {
+      if (e.key === "PrintScreen") {
+        blurImages(true);
+        alert("تم الكشف عن محاولة التقاط سكرين شوت!");
+        setTimeout(() => blurImages(false), 3000); // إزالة التشويش بعد 3 ثوانٍ
+      }
+    });
+
+    function blurImages(state) {
+      const container = document.getElementById("images");
+      if (state) {
+        container.classList.add("blurred");
+      } else {
+        container.classList.remove("blurred");
+      }
+    }
+
+    // تعطيل زر الماوس الأيمن
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // منع النسخ
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+      alert("النسخ غير مسموح!");
+    });
+  </script>
+</body>
+</html>
